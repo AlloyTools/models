@@ -5,6 +5,8 @@
 //
 //         a + b = c with a < b < c ≤ n.
 //
+// Source: https://cacm.acm.org/magazines/2017/8/219606-the-science-of-brute-force/fulltext
+//
 
 enum Color { Red, Blue }
 
