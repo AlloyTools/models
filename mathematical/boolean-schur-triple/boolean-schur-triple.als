@@ -1,4 +1,6 @@
 //
+// From: https://cacm.acm.org/magazines/2017/8/219606-the-science-of-brute-force/fulltext
+//
 // Boolean Schur Triple Problem: 
 //   does there exists a red/blue coloring of the numbers 1 to n, 
 //   such that there is no monochromatic solution of 
