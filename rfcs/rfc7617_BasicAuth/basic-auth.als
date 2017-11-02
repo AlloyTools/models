@@ -1,50 +1,37 @@
 
-
-// https://tools.ietf.org/html/rfc7230 and further
-
-sig Server {}
+// https://tools.ietf.org/html/rfc7617 Basic Authentication
 
 
-sig Path {}
-one sig EmptyPath extends Path {
-}
-
-sig Fragment {}
-
-sig URI {
-	host			:	Server,
-	path			: Path
-}
-
-enum Method { GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD }
-
-enum ResponseCode {
-	SC_OK_200, SC_NOT_FOUND_404, SC_TEMP_REDIRECT_302
-}
-
-abstract sig Body {}
-
-
-sig HttpRequest {
-	method		: Method,
-	url				: URI,
-	headers 	: seq Header,
-	body			: lone Body
-}
-
-sig HttpResponse {
-	response	: ResponseCode,
-	headers 	: seq Header,
-	payload		: lone Body,
+sig BasicChallenge extends Challenge {
+	realm		: Realm,
+	charset	: lone Charset
+} {
+	name = "Basic"
+	(RealmParameter & parameters).realm = Realm
+	one charset implies (CharsetParameter & parameters).charset = charset
 }
 
 
-abstract sig Header {
-	name			: String
+sig BasicCredentials extends Credentials {
+	user_id			: String,
+	password		:	String,
+	charset			: lone Charset
+} {
+	name = "Basic"
+	let s = user_id.cat[":"].cat[password], 
+			c = one charset implies charset else OTHER_CHARSET, 
+			p =  (Token68Parameter  & parameters ){
+
+			p.value = c.binary[s]
+
+	}
 }
 
+fun String.cat[ other : String ] : String {
+	other // wrong! but cannot concatenate
+}
 
-// https://tools.ietf.org/html/rfc7235
+// https://tools.ietf.org/html/rfc7235 Authentication
 
 one sig SC_UNAUTHORIZED_401 									extends ResponseCode {}
 
@@ -127,37 +114,48 @@ fact WWWAuthenticateChallengeResponse {
 		r.response = SC_UNAUTHORIZED_401 implies some (r.headers.elems & WWWAuthenticate )
 }
 
-// https://tools.ietf.org/html/rfc7617 Basic Authentication
+
+// https://tools.ietf.org/html/rfc7230 (HTTP 1.1) and further
+
+sig Server {}
 
 
-sig BasicChallenge extends Challenge {
-	realm		: Realm,
-	charset	: lone Charset
-} {
-	name = "Basic"
-	(RealmParameter & parameters).realm = Realm
-	one charset implies (CharsetParameter & parameters).charset = charset
+sig Path {}
+one sig EmptyPath extends Path {
+}
+
+sig URI {
+	host			:	Server,
+	path			: Path
+}
+
+enum Method { GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD }
+
+enum ResponseCode {
+	SC_OK_200, SC_NOT_FOUND_404, SC_TEMP_REDIRECT_302
+}
+
+abstract sig Body {}
+
+
+sig HttpRequest {
+	method		: Method,
+	url				: URI,
+	headers 	: seq Header,
+	body			: lone Body
+}
+
+sig HttpResponse {
+	response	: ResponseCode,
+	headers 	: seq Header,
+	payload		: lone Body,
 }
 
 
-sig BasicCredentials extends Credentials {
-	user_id			: String,
-	password		:	String,
-	charset			: lone Charset
-} {
-	name = "Basic"
-	let s = user_id.cat[":"].cat[password], 
-			c = one charset implies charset else OTHER_CHARSET, 
-			p =  (Token68Parameter  & parameters ){
-
-			p.value = c.binary[s]
-
-	}
+abstract sig Header {
+	name			: String
 }
 
-fun String.cat[ other : String ] : String {
-	other // wrong! but cannot concatenate
-}
 
 fact fixup {
 	all a : Authorization | a in HttpRequest.headers.elems
@@ -166,5 +164,7 @@ fact fixup {
 	all b : Challenge | b in Authorization.credentials
 	all b : Body | lone r : HttpRequest | r.body = b
 }
+
+
 
 run {} for 8 int
