@@ -165,6 +165,4 @@ fact fixup {
 	all b : Body | lone r : HttpRequest | r.body = b
 }
 
-
-
 run {} for 8 int
