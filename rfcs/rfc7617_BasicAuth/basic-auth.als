@@ -3,7 +3,7 @@
 
 
 sig BasicChallenge extends Challenge {
-	realm		: Realm,
+	realm	: Realm,
 	charset	: lone Charset
 } {
 	name = "Basic"
@@ -13,13 +13,13 @@ sig BasicChallenge extends Challenge {
 
 
 sig BasicCredentials extends Credentials {
-	user_id			: String,
-	password		:	String,
-	charset			: lone Charset
+	user_id		: String,
+	password	:	String,
+	charset		: lone Charset
 } {
 	name = "Basic"
-	let s = user_id.cat[":"].cat[password], 
-			c = one charset implies charset else OTHER_CHARSET, 
+	let     s = user_id.cat[":"].cat[password], 
+	        c = one charset implies charset else OTHER_CHARSET, 
 			p =  (Token68Parameter  & parameters ){
 
 			p.value = c.binary[s]
@@ -58,7 +58,7 @@ sig Authorization extends Header {
 }
 
 abstract sig AuthScheme {
-	name					: String,
+	name			: String,
 	parameters		: set Parameter
 } {
 	some (Token68Parameter & parameters) implies one parameters
@@ -71,11 +71,11 @@ sig Binary {
 }
 
 abstract sig Token68Parameter extends Parameter {
-	value : Binary
+	value   : Binary
 }
 
 abstract sig AuthParam extends Parameter {
-	name		: String
+	name    : String
 }
 
 sig Realm  {}
