@@ -13,11 +13,11 @@ enum Smoke {Kools,Chesterfield,OldGold,LuckyStrike,Parliament}
 enum Pet {fox,horse,snails,dog,zebra}
 
 sig House {
-	house    : one Color,
-    home  	 : one Nationality,
+    house    : one Color,
+    home     : one Nationality,
     drunk    : one Drink,
     smoker   : one Smoke,
-	owns     : one Pet
+    owns     : one Pet
 } 
 
 
