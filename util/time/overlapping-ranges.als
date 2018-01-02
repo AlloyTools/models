@@ -1,4 +1,4 @@
-  open util/ordering[Time]
+        open util/ordering[Time]
 
 	sig Time {}
 
