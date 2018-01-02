@@ -1,5 +1,9 @@
+# A Time Range model
+
+This example shows how you can work with time ranges.
 
 ```alloy
+
   open util/ordering[Time]
 
 	sig Time {}
@@ -32,4 +36,5 @@
 		// reflexive
 		all t1, t2, t3,  t4 : Time | overlap[t1,t2,t3,t4] <=> overlap[t3,t4,t1,t2]
 	} for 10
+
 ```alloy
