@@ -3,7 +3,7 @@
 	sig Time {}
 
 
-	let range[s,e] 				= (s + s.nexts) - e.nexts // inclusive bounds i.e. [s,e]
+	let range[s,e] 			= (s + s.nexts) - e.nexts // inclusive bounds i.e. [s,e]
 	let overlap[s1,e1,s2,e2] 	= some (range[s1,e1] & range[s2,e2])
 
 	check {
