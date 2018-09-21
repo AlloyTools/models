@@ -13,4 +13,4 @@ You can also look at this [short video](https://www.youtube.com/watch?v=4vya039K
 
 To propose a change to an existing model, just click the file you want to change and edit it by clicking on the pen in the top right corner.
 
-![image](https://user-images.githubusercontent.com/200494/45866893-630d1500-bd82-11e8-8c3d-083ad8e88be6.png)
+![image](https://user-images.githubusercontent.com/200494/45866893-630d1500-bd82-11e8-8c3d-083ad8e88be6.png | width=160)
