@@ -9,7 +9,7 @@ If you're not familiar with Github you can read [how to add a file to another re
 
 You can also look at this [short video](https://www.youtube.com/watch?v=4vya039Ku64) that shows how to propose a new model.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/4vya039Ku64" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+![Video](https://www.youtube.com/embed/4vya039Ku64")
 
 To propose a change to an existing model, just click the file you want to change and edit it by clicking on the pen in the top right corner.
 
