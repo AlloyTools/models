@@ -9,7 +9,7 @@ If you're not familiar with Github you can read [how to add a file to another re
 
 You can also look at this [short video](https://www.youtube.com/watch?v=4vya039Ku64) that shows how to propose a new model.
 
-![Video](https://www.youtube.com/embed/4vya039Ku64")
+[![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](http://youtu.be/vt5fpE0bzSY)
 
 To propose a change to an existing model, just click the file you want to change and edit it by clicking on the pen in the top right corner.
 
