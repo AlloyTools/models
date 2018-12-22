@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view nodetheme="Martha">
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Int"/>
+   <type name="Redirect"/>
+   <type name="String"/>
+   <type name="univ"/>
+   <type name="seq/Int"/>
+</node>
+
+<node color="Blue">
+   <type name="Response"/>
+</node>
+
+<node color="Gray">
+   <type name="EndPoint"/>
+   <type name="HTTPEvent"/>
+</node>
+
+<node color="Red">
+   <type name="Client"/>
+</node>
+
+<node color="Yellow">
+   <type name="Request"/>
+</node>
+
+<node visible="yes" hideunconnected="yes">
+   <type name="Server"/>
+</node>
+
+<edge color="Black">
+   <relation name="causes"> <type name="Server"/> <type name="HTTPEvent"/> </relation>
+   <relation name="embeds"> <type name="Response"/> <type name="Request"/> </relation>
+   <relation name="response"> <type name="Request"/> <type name="Response"/> </relation>
+</edge>
+
+<edge color="Black" attribute="no">
+   <relation name="origin"> <type name="HTTPEvent"/> <type name="EndPoint"/> </relation>
+   <relation name="to"> <type name="HTTPEvent"/> <type name="EndPoint"/> </relation>
+</edge>
+
+<edge color="Black" layout="yes" attribute="no">
+   <relation name="from"> <type name="HTTPEvent"/> <type name="EndPoint"/> </relation>
+</edge>
+
+<edge color="Gray" style="Dashed" label="">
+   <relation name="extends"> <type name="univ"/> <type name="univ"/> </relation>
+</edge>
+
+</view>
+
+</alloy>
