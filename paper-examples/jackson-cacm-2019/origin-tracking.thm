@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view nodetheme="Martha">
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Int"/>
+   <type name="Redirect"/>
+   <type name="String"/>
+   <type name="univ"/>
+   <type name="seq/Int"/>
+   <set name="$r" type="Request"/>
+</node>
+
+<node color="Blue" label="Resp">
+   <type name="Response"/>
+</node>
+
+<node color="Gray">
+   <type name="HTTPEvent"/>
+</node>
+
+<node color="Red">
+   <type name="Client"/>
+</node>
+
+<node color="Yellow" label="Req">
+   <type name="Request"/>
+</node>
+
+<node showinattr="yes">
+   <set name="$bad" type="Server"/>
+   <set name="$good" type="Server"/>
+</node>
+
+<node visible="no" color="Gray">
+   <type name="EndPoint"/>
+</node>
+
+<node visible="yes" hideunconnected="yes">
+   <type name="Server"/>
+</node>
+
+<edge attribute="no">
+   <relation name="causes"> <type name="Server"/> <type name="HTTPEvent"/> </relation>
+</edge>
+
+<edge color="Black">
+   <relation name="response"> <type name="Request"/> <type name="Response"/> </relation>
+</edge>
+
+<edge color="Gray" layout="no">
+   <relation name="embeds"> <type name="Response"/> <type name="Request"/> </relation>
+</edge>
+
+<edge visible="no" attribute="yes">
+   <relation name="origin"> <type name="HTTPEvent"/> <type name="EndPoint"/> </relation>
+   <relation name="to"> <type name="HTTPEvent"/> <type name="EndPoint"/> </relation>
+</edge>
+
+<edge visible="no" layout="yes" attribute="yes">
+   <relation name="from"> <type name="HTTPEvent"/> <type name="EndPoint"/> </relation>
+</edge>
+
+</view>
+
+</alloy>
