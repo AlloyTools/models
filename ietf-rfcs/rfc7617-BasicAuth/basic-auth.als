@@ -161,7 +161,7 @@ fact fixup {
 	all a : Authorization | a in HttpRequest.headers.elems
 	all a : WWWAuthenticate | a in HttpResponse.headers.elems
 	all b : Credentials | b in Authorization.credentials
-	all b : Challenge | b in Authorization.credentials
+	all b : Challenge | b in WWWAuthenticate.challenges.elems
 	all b : Body | lone r : HttpRequest | r.body = b
 }
 
