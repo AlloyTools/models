@@ -37,13 +37,13 @@ pull request to have them considered for merging into the main Bnd repo.
 
 After forking the main Bnd repo on GitHub, you can clone the main repo to your system:
 
-    git clone https://github.com/AlloyTools/models.git AlloyTools/models
+    git clone https://github.com/AlloyTools/models.git
 
 This will clone the main repo to a local repo on your disk and set up the `origin` remote in Git.
 Next you will set up the the second side of the triangle to your fork repo.
 
     cd AlloyTools/models
-    git remote add fork git@github.com:<github-user>/AlloyTools/models.git
+    git remote add fork git@github.com:<github-user>/models.git
 
 Make sure to replace the URL with the SSH URL to your fork repo on GitHub. Then we configure
 the local repo to push your commits to the fork repo.
@@ -67,7 +67,6 @@ main repo.
 We are always thrilled to receive pull requests, and do our best to
 process them as fast as possible. Not sure if that typo is worth a pull
 request? (Again, you can edit the files directly on Github!) Do it! We will appreciate it.
-
 If your pull request is not accepted on the first try, don't be
 discouraged! If there's a problem, hopefully you
 received feedback on what to improve.
