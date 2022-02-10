@@ -4,7 +4,7 @@ Found a bug, issue, or shortcoming in of the existing models? Created an interes
 
 ## Reporting Issues
 
-Reporting [issues](https://github.com/AlloyTools/org.alloytools.alloy.models/issues). Please provide the version of Alloy you are using. If you can provide examples, then that would be very much appreciated. When you provide a PR, our gratidtude will have no bounds.
+Reporting [issues](https://github.com/AlloyTools/models/issues). Please provide the version of Alloy you are using. If you can provide examples, then that would be very much appreciated. When you provide a PR, our gratidtude will have no bounds.
 
 ## Adding a new Model
 
@@ -28,8 +28,8 @@ If you have a small fix, then just edit the model and commit it. Github will aut
 ### Regular contributions
 
 For more extensive and (can we dream?) regular contributions we suggest to clone the repository. We use [git triangular workflow](https://www.sociomantic.com/blog/2014/05/git-triangular-workflow/).
-This means that no one, not even the maintainers of this site, push contributions directly into the [main org.alloytools.alloy.models repo](https://github.com/AlloyTools/org.alloytools.alloy.models). All contribution come in through pull requests (PR).
-So each contributor will need to [fork the main models repo](https://github.com/AlloyTools/org.alloytools.alloy.models/fork)
+This means that no one, not even the maintainers of this site, push contributions directly into the [main models repo](https://github.com/AlloyTools/models). All contribution come in through pull requests (PR).
+So each contributor will need to [fork the main models repo](https://github.com/AlloyTools/models/fork)
 on GitHub. All contributions are made as commits to your fork. Then you submit a
 pull request to have them considered for merging into the main Bnd repo.
 
@@ -37,13 +37,13 @@ pull request to have them considered for merging into the main Bnd repo.
 
 After forking the main Bnd repo on GitHub, you can clone the main repo to your system:
 
-    git clone https://github.com/AlloyTools/org.alloytools.alloy.models.git
+    git clone https://github.com/AlloyTools/models.git
 
 This will clone the main repo to a local repo on your disk and set up the `origin` remote in Git.
 Next you will set up the the second side of the triangle to your fork repo.
 
-    cd org.alloytools.alloy.models
-    git remote add fork git@github.com:<github-user>/org.alloytools.alloy.models.git
+    cd AlloyTools/models
+    git remote add fork git@github.com:<github-user>/models.git
 
 Make sure to replace the URL with the SSH URL to your fork repo on GitHub. Then we configure
 the local repo to push your commits to the fork repo.
@@ -67,7 +67,6 @@ main repo.
 We are always thrilled to receive pull requests, and do our best to
 process them as fast as possible. Not sure if that typo is worth a pull
 request? (Again, you can edit the files directly on Github!) Do it! We will appreciate it.
-
 If your pull request is not accepted on the first try, don't be
 discouraged! If there's a problem, hopefully you
 received feedback on what to improve.
