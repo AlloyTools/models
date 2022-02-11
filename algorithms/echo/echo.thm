@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view>
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Echo"/>
+   <type name="Forward"/>
+   <type name="Green"/>
+   <type name="Initiate"/>
+   <type name="Int"/>
+   <type name="Red"/>
+   <type name="String"/>
+   <type name="Stutter"/>
+   <type name="univ"/>
+   <type name="open$4/Ord"/>
+   <type name="seq/Int"/>
+   <set name="$events" type="Event"/>
+   <set name="$initiate_" type="Event"/>
+   <set name="$stutter_" type="Event"/>
+</node>
+
+<node color="Yellow">
+   <type name="Node"/>
+</node>
+
+<node hideunconnected="yes" color="Blue">
+   <type name="Event"/>
+</node>
+
+<node shape="Box" color="Yellow">
+   <type name="PNode"/>
+</node>
+
+<node shape="House" color="Yellow">
+   <type name="INode"/>
+</node>
+
+<node visible="no">
+   <type name="Color"/>
+   <type name="ordering/Ord"/>
+</node>
+
+<edge color="Gray" constraint="no">
+   <relation name="Next"> <type name="ordering/Ord"/> <type name="Color"/> <type name="Color"/> </relation>
+</edge>
+
+<edge color="Gray" visible="no" attribute="yes" constraint="no">
+   <relation name="color"> <type name="Node"/> <type name="Color"/> </relation>
+   <relation name="First"> <type name="ordering/Ord"/> <type name="Color"/> </relation>
+</edge>
+
+<edge layout="yes" constraint="no">
+   <relation name="parent"> <type name="Node"/> <type name="Node"/> </relation>
+</edge>
+
+<edge visible="no" attribute="yes" constraint="no">
+   <relation name="inbox"> <type name="Node"/> <type name="Node"/> </relation>
+</edge>
+
+</view>
+
+</alloy>
