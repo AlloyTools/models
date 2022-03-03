@@ -113,9 +113,9 @@ of its neighbors except its future parent `fp`.
 ```alloy
 pred broadcast[n, fp: Node] {
   all q: n.neighbors - fp | q.inbox' = q.inbox + n
-  all u: Node - n.neighbors + fp | u.inbox' = u.inbox	
+  all u: (Node - n.neighbors) + fp | unchanged[u.inbox]	
 }
-```
+```:
 
 The first step of the algorithm: the initiator braodcasts itself to each of its
 neighbors:
