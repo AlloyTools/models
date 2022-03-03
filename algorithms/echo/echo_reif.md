@@ -55,7 +55,7 @@ pred stutter {
 
 pred broadcast[n, fp: Node] {
     all q: n.neighbors - fp | q.inbox' = q.inbox + n
-    all u: Node - n.neighbors + fp | u.inbox' = u.inbox	
+    all u: (Node - n.neighbors) + fp | unchanged[u.inbox]
 }
 
 pred initiate {
@@ -155,8 +155,8 @@ assert EchoComesBack {
 check EchoComesBack
 
 assert SpanningTree {
-    (eventually INode.color = Green) 
-    implies (eventually (tree[~parent] and rootedAt[~parent, INode]))
+  always (INode.color = Green 
+    implies (tree[~parent] and rootedAt[~parent, INode]))
 }
 check SpanningTree
 ```

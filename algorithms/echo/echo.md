@@ -113,9 +113,9 @@ of its neighbors except its future parent `fp`.
 ```alloy
 pred broadcast[n, fp: Node] {
   all q: n.neighbors - fp | q.inbox' = q.inbox + n
-  all u: Node - n.neighbors + fp | u.inbox' = u.inbox	
+  all u: (Node - n.neighbors) + fp | unchanged[u.inbox]	
 }
-```
+```:
 
 The first step of the algorithm: the initiator braodcasts itself to each of its
 neighbors:
@@ -212,8 +212,8 @@ assert EchoComesBack {
 check EchoComesBack
 
 assert SpanningTree {
-  (eventually INode.color = Green) 
-    implies (eventually (tree[~parent] and rootedAt[~parent, INode]))
+  always (INode.color = Green 
+    implies (tree[~parent] and rootedAt[~parent, INode]))
 }
 check SpanningTree
 ```
