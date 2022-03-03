@@ -119,8 +119,7 @@ the check whether we got a spanning tree as result of the algorithm:
 ```alloy
 assert SpanningTree {
     #{ n: Node | n = n.parent} = 1
-    eventually (color = Node->Green)
-        implies (eventually tree[~(parent-iden)])
+    always (color = Node->Green implies tree[~(parent-iden)])
 }
 
 check SpanningTree

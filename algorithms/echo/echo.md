@@ -212,8 +212,8 @@ assert EchoComesBack {
 check EchoComesBack
 
 assert SpanningTree {
-  (eventually INode.color = Green) 
-    implies (eventually (tree[~parent] and rootedAt[~parent, INode]))
+  always (INode.color = Green 
+    implies (tree[~parent] and rootedAt[~parent, INode]))
 }
 check SpanningTree
 ```
