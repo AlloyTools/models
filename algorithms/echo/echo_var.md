@@ -6,7 +6,7 @@ date: February 2022
 ## The echo algorithm - variant
 
 So far we specified graphs with a dedicated node that initiates
-the echo algorithm. In this variant of the specificiation we let the
+the echo algorithm. In this variant of the specification we let the
 Alloy model finder choose the initiating node.
 
 ```alloy
@@ -80,8 +80,8 @@ pred echo [n: Node] {
 }
 ```
 
-In the definition of the transition system, we perfrom as first step
-`initiate` for some node choosen by the model finder. Thus the other
+In the definition of the transition system, we perform as first step
+`initiate` for some node chosen by the model finder. Thus, the other
 possible steps are only possible in the next step `after` the first
 one:
 

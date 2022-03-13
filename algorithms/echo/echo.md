@@ -49,7 +49,7 @@ let unchanged[r] { (r)' = (r) }
 ```
 
 To control the state of each node, we provide colors. In the initial
-state all nodes are `Red`. A node that has send its echo back to its parent
+state all nodes are `Red`. A node that has sent its echo back to its parent
 changes his color to `Green`. The following enumeration defines our two colors:
 
 ```alloy
@@ -115,9 +115,9 @@ pred broadcast[n, fp: Node] {
   all q: n.neighbors - fp | q.inbox' = q.inbox + n
   all u: (Node - n.neighbors) + fp | unchanged[u.inbox]	
 }
-```:
+```
 
-The first step of the algorithm: the initiator braodcasts itself to each of its
+The first step of the algorithm: the initiator broadcasts itself to each of its
 neighbors:
 
 ```alloy
@@ -150,8 +150,8 @@ pred echo [n: Node] {
 }
 ```
 
-The specification of the transition system: beginnend in the initial state always 
-some of the transition predicates have to be fulfilled i.e. a step is performed.
+The specification of the transition system: beginning in the initial state always 
+some transition predicate has to be fulfilled i.e. a step is performed.
 
 ```alloy
 fact trans {
@@ -165,7 +165,7 @@ fact trans {
 }
 ```
 
-The predicate fairness guarantees that if the guard of a transition predicate becomes true
+The predicate `fairness` guarantees that if the guard of a transition predicate becomes true
 then eventually the transition happens; 
 see [Verifying the expected properties of the protocol](https://haslab.github.io/formal-software-design/protocol-design/index.html#verifying-the-expected-properties-of-the-protocol)
 by Julien Brunel, David Chemouil, Alcino Cunha, Nuno Macedo.
