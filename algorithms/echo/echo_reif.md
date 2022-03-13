@@ -90,7 +90,7 @@ enum TransPred { Initiate, Forward, Echo, Stutter }
 In the second step we make sure that these singletons are coupled with
 the state transitions using functions in Alloy. At first
 glance the definition of the functions look self-referential: In the
-definition of `initiate` e.g. `initiate` itself occurs.  However in one
+definition of `initiate` e.g. `initiate` itself occurs. However, in one
 case it is the _function_ and in the other case the _predicate_. In
 Alloy functions and predicates can be overloaded.
 
