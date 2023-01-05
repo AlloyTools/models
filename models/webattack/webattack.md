@@ -199,7 +199,7 @@ We're cheating a bit because we do not record the cookies in the browser, we rel
 on the shared state to store the cookies. (This is dangerous because it is 
 now easy to make facts that assume the server knows about the browser.)
 
-We are also definining two users: Alice and Eve. Alice is the good girl and gets a password. Eve is evil
+We are also defining two users: Alice and Eve. Alice is the good girl and gets a password. Eve is evil
 and we do not constrain her use of credentials. In practice, this means that Alloy will use all
 possible credentials for Eve.
 

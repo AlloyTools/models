@@ -4,7 +4,7 @@
  * over arbitrary network topologies
  *
  * Each process has a parent and a level, both of which are
- * initally null. A distinct root node exists at which the
+ * initially null. A distinct root node exists at which the
  * algorithm starts. In the first step, the root assigns itself
  * the level of zero and sends its level to its neighbors.
  * Subsequently, if a node reads a message with level k, it sets
@@ -16,7 +16,7 @@
  *
  * We model communication through a state-reading model, in which
  * nodes can directly read the state of their neighbors. Messages
- * are not explicity modelled. This makes no difference for this
+ * are not explicitly modelled. This makes no difference for this
  * algorithm since once a node sends a message, the state of the
  * node stays the same as the contents of the message.
  */
