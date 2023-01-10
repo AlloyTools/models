@@ -12,7 +12,7 @@
  * author: Tina Nolte
  */
 
-open examples/case_studies/sync as sync
+open sync as sync
 open util/ordering[sync/Name] as ord
 open util/relation as rel
 
