@@ -40,9 +40,9 @@ abstract sig KDS {
   members : Tick -> Member
 }{
   Monotonic[keys]
-  all t : Tick | let t' = ord/prev[t] {
-    all m : members[t]-members[t'] | Join[m, t, this]
-    all m : members[t']-members[t] | Leave[m, t]
+  all t : Tick | let t" = ord/prev[t] {
+    all m : members[t]-members[t"] | Join[m, t, this]
+    all m : members[t"]-members[t] | Leave[m, t]
   }
 }
 
@@ -84,8 +84,8 @@ sig DataMessage extends Message {
   gsaID : GSA,
   retransmitTime : Tick }
 { SendMessage[sender, sentTime, this] ||
-  (some msg' : DataMessage |
-     Remulticast[gsaID, msg', retransmitTime, this]) }
+  (some msg" : DataMessage |
+     Remulticast[gsaID, msg", retransmitTime, this]) }
 
 sig GSA extends KDS {
   parent : lone GSA }
@@ -99,9 +99,9 @@ sig Client extends Member {
     k.generator = server && k.generatedTime = t }
 
 fact IolusProperties {
-  no k, k' : GroupKey | k!=k' && k.generator = k'.generator && k.generatedTime = k'.generatedTime
+  no k, k" : GroupKey | k!=k" && k.generator = k".generator && k.generatedTime = k".generatedTime
   all g : GSA, msg : DataMessage, t : Tick | RemulticastConditions[g, msg, t] =>
-    (some msg': DataMessage | Remulticast[g, msg, t, msg'])
+    (some msg": DataMessage | Remulticast[g, msg, t, msg"])
 }
 
 fact GSATree {
@@ -114,13 +114,13 @@ fact {
   KDS = GSA
   Message = DataMessage
   Key = GroupKey
-  no m, m' : DataMessage {
-    m!=m'
-    m.sender = m'.sender
-    m.sentTime = m'.sentTime
-    m.key = m'.key
-    m.gsaID = m'.gsaID
-    m.retransmitTime = m'.retransmitTime }
+  no m, m" : DataMessage {
+    m!=m"
+    m.sender = m".sender
+    m.sentTime = m".sentTime
+    m.key = m".key
+    m.gsaID = m".gsaID
+    m.retransmitTime = m".retransmitTime }
 }
 
 ----------------------------------------------
@@ -162,7 +162,7 @@ pred SendRequest[c : Client, gsa : GSA, t : Tick, msg : DataMessage] {
   msg.gsaID = gsa
   msg.retransmitTime = t
   (some gsa.parent.members[t]) =>
-    (some msg' : DataMessage | Remulticast[gsa, msg, t, msg']) }
+    (some msg" : DataMessage | Remulticast[gsa, msg, t, msg"]) }
 
 pred ReceiveMessage[m : Member, t : Tick, msg : Message] {
   ReceiveConditions[m, t, msg]
@@ -179,10 +179,10 @@ pred ReceiveConditions[m : Member, t : Tick, msg : Message] {
   msg.key in m.ownedKeys[t] }
 
 pred CanReceive[m : Member, t : Tick, msg : Message] {
-  some msg' : DataMessage {
-    msg'.sentTime = msg.sentTime
-    msg'.sender = msg.sender
-    msg' in m.receivedMessages[ord/prev[t]] || ReceiveConditions[m, t, msg'] }}
+  some msg" : DataMessage {
+    msg".sentTime = msg.sentTime
+    msg".sender = msg.sender
+    msg" in m.receivedMessages[ord/prev[t]] || ReceiveConditions[m, t, msg"] }}
 
 pred IsMember[m : Member, t : Tick] {
   some kds : KDS | m in kds.members[t]
@@ -194,13 +194,13 @@ pred RemulticastConditions[g : GSA, msg : DataMessage, t : Tick] {
   msg.key in g.keys[t] + g.parent.keys[t]
   some g.parent + g - msg.gsaID }
 
-pred Remulticast[g : GSA, msg : DataMessage, t : Tick, msg': lone DataMessage] {
+pred Remulticast[g : GSA, msg : DataMessage, t : Tick, msg": lone DataMessage] {
   RemulticastConditions[g, msg, t]
-  let g' = g.parent + g - msg.gsaID | NewestKey[g'.keys[msg.sentTime], msg'.key]
-  msg'.sender = msg.sender
-  msg'.sentTime = msg.sentTime
-  msg'.retransmitTime = t
-  msg'.gsaID = g
+  let g" = g.parent + g - msg.gsaID | NewestKey[g".keys[msg.sentTime], msg".key]
+  msg".sender = msg.sender
+  msg".sentTime = msg.sentTime
+  msg".retransmitTime = t
+  msg".gsaID = g
 }
 
 pred KeyUpdate[g : GSA, t : Tick] {
@@ -234,7 +234,7 @@ assert Acyclic {
 //check Acyclic for 6 -- one min
 
 assert Connected {
-  all g, g' : GSA | g in g'.*(parent + ~parent) }
+  all g, g" : GSA | g in g".*(parent + ~parent) }
 
 //check Connected for 6
 
@@ -244,17 +244,17 @@ assert TimeProceeds {
 //check TimeProceeds for 6
 
 pred LoopFree {
-  no t, t' : Tick {
-    t!=t'
-    all k : KDS | k.members[t] = k.members[t'] -- no constraint on keys
-    all m : Member | m.receivedMessages[t] = m.receivedMessages[t']
+  no t, t" : Tick {
+    t!=t"
+    all k : KDS | k.members[t] = k.members[t"] -- no constraint on keys
+    all m : Member | m.receivedMessages[t] = m.receivedMessages[t"]
     all m : DataMessage | m.retransmitTime = t =>
-      (some m' : DataMessage {
-        m'.retransmitTime = t'
-        m.sender = m'.sender
-        m.sentTime = m'.sentTime
-        m.gsaID = m'.gsaID
-        m.key = m'.key })
+      (some m" : DataMessage {
+        m".retransmitTime = t"
+        m.sender = m".sender
+        m.sentTime = m".sentTime
+        m.gsaID = m".gsaID
+        m.key = m".key })
     }}
 
 //fact NoLoop { LoopFree() } -- Property-specific diameter
@@ -266,7 +266,7 @@ assert loop {
 
 assert NonLinearTopology {
   (no g : GSA | #g.~parent > 1) ||
-  !(some m, m' : DataMessage | Remulticast[m.gsaID, m', m.retransmitTime, m]
+  !(some m, m" : DataMessage | Remulticast[m.gsaID, m", m.retransmitTime, m]
     && !SendMessage[m.sender, m.sentTime, m]
     && (some c : Client | m in c.receivedMessages[ord/nexts[m.retransmitTime]]))}
 
@@ -284,8 +284,8 @@ assert Trivial {
 
 assert x {
   !(LoopFree && some DataMessage &&
-     (some t : Tick | some m, m' : Member |
-        m!=m' && IsMember[m, t] && IsMember[m', t] && t != ord/next[ord/first]))
+     (some t : Tick | some m, m" : Member |
+        m!=m" && IsMember[m, t] && IsMember[m", t] && t != ord/next[ord/first]))
 }
 
 //check x for 3 but 2 Member, 2 KDS, 2 Message
@@ -307,9 +307,9 @@ assert OutsiderCantSend {
 }
 assert InsiderCanRead {
   all msg : Message, m : Member |
-    some t : Tick - ord/last | all t' : ord/nexts[t] |
+    some t : Tick - ord/last | all t" : ord/nexts[t] |
       (IsMember[msg.sender, msg.sentTime] &&
-       IsMember[m, msg.sentTime]) => CanReceive[m, t', msg]
+       IsMember[m, msg.sentTime]) => CanReceive[m, t", msg]
 }
 
 check OutsiderCantRead for 5 but 3 Member expect 0

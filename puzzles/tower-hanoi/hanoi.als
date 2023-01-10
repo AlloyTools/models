@@ -73,18 +73,18 @@ fun topDisc[st: State, stake: Stake]: lone Disc {
  * the "det" modifier above.  (It's important to use the "det" modifier
  * to tell the Alloy Analyzer that the function is in fact deterministic.)
  */
-pred Move [st: State, fromStake, toStake: Stake, s': State] {
+pred Move [st: State, fromStake, toStake: Stake, s": State] {
    let d = st.topDisc[fromStake] | {
       // all discs on toStake must be larger than d,
       // so that we can put d on top of them
       st.discsOnStake[toStake] in discs/nexts[d]
       // after, the fromStake has the discs it had before, minus d
-      s'.discsOnStake[fromStake] = st.discsOnStake[fromStake] - d
+      s".discsOnStake[fromStake] = st.discsOnStake[fromStake] - d
       // after, the toStake has the discs it had before, plus d
-      s'.discsOnStake[toStake] = st.discsOnStake[toStake] + d
+      s".discsOnStake[toStake] = st.discsOnStake[toStake] + d
       // the remaining stake afterwards has exactly the discs it had before
       let otherStake = Stake - fromStake - toStake |
-        s'.discsOnStake[otherStake] = st.discsOnStake[otherStake]
+        s".discsOnStake[otherStake] = st.discsOnStake[otherStake]
    }
 }
 

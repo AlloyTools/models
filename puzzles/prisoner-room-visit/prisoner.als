@@ -45,59 +45,59 @@ pred CurrentPlayerSetToNull {first.currentPrisoner = NULL}
 
 fact Init{TineSwichedSetToZero and CountSetToZero and SwitchesInBoolean and AnnouncedSetToFalse and CurrentPlayerSetToNull}
 
-pred NonCounterStep[game, game': State,p:Prisoner]{
+pred NonCounterStep[game, game": State,p:Prisoner]{
 	p in OtherPrisoner
-	game'.currentPrisoner = p
-	game'.announced = game.announced
-	game'.count = game.count
+	game".currentPrisoner = p
+	game".announced = game.announced
+	game".count = game.count
 	(game.announced= True =>
-		game'.SwitchesStatus = game.SwitchesStatus
-		and game'.timesSwitched = game.timesSwitched
+		game".SwitchesStatus = game.SwitchesStatus
+		and game".timesSwitched = game.timesSwitched
 	else
 		((game.SwitchesStatus[SwitcheA] = Down and p.(game.timesSwitched) <2) =>
-			SwitcheA.(game'.SwitchesStatus) = Up
-			and SwitcheB.(game'.SwitchesStatus) = SwitcheB.(game.SwitchesStatus)
-			and game'.timesSwitched = game.timesSwitched - p->p.(game.timesSwitched) + p->(p.(game.timesSwitched)+1)
+			SwitcheA.(game".SwitchesStatus) = Up
+			and SwitcheB.(game".SwitchesStatus) = SwitcheB.(game.SwitchesStatus)
+			and game".timesSwitched = game.timesSwitched - p->p.(game.timesSwitched) + p->(p.(game.timesSwitched)+1)
 		else
-			game'.timesSwitched = game.timesSwitched
-			and SwitcheA.(game'.SwitchesStatus) = SwitcheA.(game.SwitchesStatus)
+			game".timesSwitched = game.timesSwitched
+			and SwitcheA.(game".SwitchesStatus) = SwitcheA.(game.SwitchesStatus)
 			and (SwitcheB.(game.SwitchesStatus) = Up=>
-				SwitcheB.(game'.SwitchesStatus) = Down
+				SwitcheB.(game".SwitchesStatus) = Down
 			else
-				SwitcheB.(game'.SwitchesStatus) = Up)))
+				SwitcheB.(game".SwitchesStatus) = Up)))
 }
 
-pred CounterStep[game, game': State, p:Prisoner]{
+pred CounterStep[game, game": State, p:Prisoner]{
 	p = CounterPrisoner
-	game'.currentPrisoner = p
-	game'.timesSwitched = game.timesSwitched
+	game".currentPrisoner = p
+	game".timesSwitched = game.timesSwitched
 	(game.announced= True =>
-		game'.SwitchesStatus = game.SwitchesStatus
-		and game'.announced = game.announced
-		and game'.count =game.count
+		game".SwitchesStatus = game.SwitchesStatus
+		and game".announced = game.announced
+		and game".count =game.count
 	else
 		(SwitcheA.(game.SwitchesStatus) = Up =>
-			SwitcheA.(game'.SwitchesStatus) = Down
-			and SwitcheB.(game'.SwitchesStatus) = SwitcheB.(game.SwitchesStatus)
-			and game'.count =game.count +1
-			and (game'.count = 2.mul[(#Prisoner-1)] =>
-				game'.announced = True
+			SwitcheA.(game".SwitchesStatus) = Down
+			and SwitcheB.(game".SwitchesStatus) = SwitcheB.(game.SwitchesStatus)
+			and game".count =game.count +1
+			and (game".count = 2.mul[(#Prisoner-1)] =>
+				game".announced = True
 			else
-				game'.announced = game.announced)
+				game".announced = game.announced)
 		else
-			game'.count = game.count
-			and game'.announced = game.announced
-			and SwitcheA.(game'.SwitchesStatus) = SwitcheA.(game.SwitchesStatus)
+			game".count = game.count
+			and game".announced = game.announced
+			and SwitcheA.(game".SwitchesStatus) = SwitcheA.(game.SwitchesStatus)
 			and (SwitcheB.(game.SwitchesStatus) = Up=>
-				SwitcheB.(game'.SwitchesStatus) = Down
+				SwitcheB.(game".SwitchesStatus) = Down
 			else
-				SwitcheB.(game'.SwitchesStatus) = Up)))
+				SwitcheB.(game".SwitchesStatus) = Up)))
 }
 
 fact Steps{
-		all s: State, s': s.next {
-			(one p:OtherPrisoner | NonCounterStep[s, s',p])
-			 or (one p:CounterPrisoner | CounterStep[s, s',p])
+		all s: State, s": s.next {
+			(one p:OtherPrisoner | NonCounterStep[s, s",p])
+			 or (one p:CounterPrisoner | CounterStep[s, s",p])
 		}
 }
 
@@ -147,7 +147,7 @@ check CountInvariant for 3 Prisoner, 10 State
 pred AfterNonCounterPlayerEventaullyCounterPlayertEnterTheRoom{
 		all s: State|
 			((s.currentPrisoner in OtherPrisoner) => 
-				(some s': s.^next | s'.currentPrisoner = CounterPrisoner))
+				(some s": s.^next | s".currentPrisoner = CounterPrisoner))
 }
 
 pred PrisonerComesImmediatelyAfterCounter[s: State, p:OtherPrisoner]{ 
@@ -155,9 +155,9 @@ pred PrisonerComesImmediatelyAfterCounter[s: State, p:OtherPrisoner]{
 }
 
 pred Fairness {(all p:OtherPrisoner{ 
-			some s,s':State {s' in s.^next 
+			some s,s":State {s" in s.^next
 					and PrisonerComesImmediatelyAfterCounter[s,p] 
-					and PrisonerComesImmediatelyAfterCounter[s',p]
+					and PrisonerComesImmediatelyAfterCounter[s",p]
 			}
 		})
 		AfterNonCounterPlayerEventaullyCounterPlayertEnterTheRoom

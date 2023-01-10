@@ -15,30 +15,30 @@ sig P {
 	right = next.@left
 }
 
-let update[table',settings'] = no table' or table'.setting=settings'
+let update[table",settings"] = no table" or table".setting=settings"
 
-let take[ philosopher, fork, table, table'] {
+let take[ philosopher, fork, table, table"] {
 	no table.setting.fork
-	table'.update[ table.setting + philosopher -> fork ]
+	table".update[ table.setting + philosopher -> fork ]
 }
 
-let eat[ philosopher, table,  table' ] {
+let eat[ philosopher, table,  table" ] {
 	let forks = table.setting[philosopher] {
 		# forks = 2
-		table'.update[ table.setting - philosopher->forks ]
+		table".update[ table.setting - philosopher->forks ]
 	}
 }
 
-let wait[p,table,tableOrNone'] = {
-	one tableOrNone'
-	tableOrNone'.setting = table.setting
+let wait[p,table,tableOrNone"] = {
+	one tableOrNone"
+	tableOrNone".setting = table.setting
 }
 
-pred step[ philosopher : P, table : Table, table' : lone Table ] {
-		philosopher.take[ philosopher.left, 	table, table' ]
-	or 	philosopher.take[ philosopher.right, 	table, table' ]
-	or	philosopher.eat[ 						table, table' ]
-	or  philosopher.wait[						table, table' ]
+pred step[ philosopher : P, table : Table, table" : lone Table ] {
+		philosopher.take[ philosopher.left, 	table, table" ]
+	or 	philosopher.take[ philosopher.right, 	table, table" ]
+	or	philosopher.eat[ 						table, table" ]
+	or  philosopher.wait[						table, table" ]
 
 }
 

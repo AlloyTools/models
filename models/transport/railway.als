@@ -24,9 +24,9 @@ pred MayMove [g: GateState, x: TrainState, ts: set Train] {
   no ts.(x.on) & g.closed
   }
 
-pred TrainsMove [x, x': TrainState, ts: set Train] {
-  all t: ts | t.(x'.on) in t.(x.on).next
-  all t: Train - ts | t.(x'.on) = t.(x.on)
+pred TrainsMove [x, x": TrainState, ts: set Train] {
+  all t: ts | t.(x".on) in t.(x.on).next
+  all t: Train - ts | t.(x".on) = t.(x.on)
   }
 
 pred GatePolicy [g: GateState, x: TrainState] {
@@ -35,19 +35,19 @@ pred GatePolicy [g: GateState, x: TrainState] {
 }
 
 assert PolicyWorks {
-  all x, x': TrainState, g: GateState, ts: set Train |
+  all x, x": TrainState, g: GateState, ts: set Train |
     {MayMove [g, x, ts]
-    TrainsMove [x, x', ts]
+    TrainsMove [x, x", ts]
     Safe [x]
     GatePolicy [g, x]
-    } => Safe [x']
+    } => Safe [x"]
   }
 
 -- has counterexample in scope of 4
 check PolicyWorks for 2 Train, 1 GateState, 2 TrainState, 4 Seg expect 1
 
-pred TrainsMoveLegal [x, x': TrainState, g: GateState, ts: set Train] {
-  TrainsMove [x, x', ts]
+pred TrainsMoveLegal [x, x": TrainState, g: GateState, ts: set Train] {
+  TrainsMove [x, x", ts]
   MayMove [g, x, ts]
   GatePolicy [g, x]
   }

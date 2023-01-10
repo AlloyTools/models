@@ -116,8 +116,8 @@ the cart. I.e. it _activates_ the cart. (Never realized you could hack in models
 
 ```alloy
 
-	pred login[ s, s' : lone State ] {
-		let 	browser = s'.browser, 
+	pred login[ s, s" : lone State ] {
+		let 	browser = s".browser,
 			userid = browser.userid,
 			password = browser.password {
 
@@ -126,13 +126,13 @@ the cart. I.e. it _activates_ the cart. (Never realized you could hack in models
 			no s.cart.userid
 			authenticate[ userid,password ] 
 
-			s'.action = LOGIN
-			s'.nextToken = s.nextToken.next
-			s'.stock = s.stock
-			s'.cart = s.cart + (s.nextToken->userid)
-			s'.token = s.nextToken
-			s'.bought = none	
-			s'.cookies = s.cookies + (browser->s.nextToken)
+			s".action = LOGIN
+			s".nextToken = s.nextToken.next
+			s".stock = s.stock
+			s".cart = s.cart + (s.nextToken->userid)
+			s".token = s.nextToken
+			s".bought = none
+			s".cookies = s.cookies + (browser->s.nextToken)
 		}
 	}
 ```
@@ -144,9 +144,9 @@ the sale in the corresponding cart.
 
 ```alloy
 
-	pred buy[ s, s' : State ] {
-		let 	item 	= s'.bought, 
-			tkn 	= s'.token {
+	pred buy[ s, s" : State ] {
+		let 	item 	= s".bought,
+			tkn 	= s".token {
 
 			some item
 			item in s.stock 
@@ -154,14 +154,14 @@ the sale in the corresponding cart.
 			one tkn
 			some s.cart[tkn]
 	
-			s'.action = BUY
-			s'.nextToken = s.nextToken
-			s'.stock = s.stock-item
-			s'.cart = s.cart + (tkn -> item)
-			s'.token = tkn
-			s'.bought = item
+			s".action = BUY
+			s".nextToken = s.nextToken
+			s".stock = s.stock-item
+			s".cart = s.cart + (tkn -> item)
+			s".token = tkn
+			s".bought = item
 	
-			s'.cookies = s.cookies
+			s".cookies = s.cookies
 		}
 	}
 ```
@@ -175,17 +175,17 @@ For `check` commands they are generally irrelevant.
 
 ```alloy
 
-	pred stutter[s, s' : State ] {
+	pred stutter[s, s" : State ] {
 
-		s'.action = STUTTER
-		s'.nextToken = s.nextToken
-		s'.stock = s.stock
-		s'.cart = s.cart
-		s'.browser = none
-		s'.token = none
-		s'.bought = none
+		s".action = STUTTER
+		s".nextToken = s.nextToken
+		s".stock = s.stock
+		s".cart = s.cart
+		s".browser = none
+		s".token = none
+		s".bought = none
 
-		s'.cookies = s.cookies
+		s".cookies = s.cookies
 	}		
 
 ```
@@ -233,13 +233,13 @@ That is, each action predicate is used to constrain State<sup>n</sup> -> State<s
 		no st/first.cookies
 		st/first.action = INIT
 
-		all s' : State - first, s : s'.prev {
+		all s" : State - first, s : s".prev {
 
-				login[s,s']
+				login[s,s"]
 			or 
-				buy[s,s']
+				buy[s,s"]
 			or
-				stutter[s,s']
+				stutter[s,s"]
 
 		}
 	}
