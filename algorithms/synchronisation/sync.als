@@ -6,9 +6,6 @@
  *   "What is a File Synchronizer", Indiana University CSCI
  *   Technical Report #507, April 22, 1998
  *
- * For a detailed description, see:
- *   http://sdg.lcs.mit.edu/pubs/theses/tnolte_masters.pdf
- *
  * author: Tina Nolte
  */
 

@@ -1,5 +1,9 @@
-// https://dev.to/davidk01/fun-with-alloy-model-checker-2d9b
-// SEND + MORE = MONEY
+/*
+ * Famous puzzle "SEND + MORE = MONEY"
+ * Substitute each letter in the equation with a single integer 0-9
+ * (no duplicates) such that the addition is correct.
+ *
+ */
 
 // Non-negative numbers
 abstract sig Num { val: Int } { val >= 0 && val <= 9 }

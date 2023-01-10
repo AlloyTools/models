@@ -2,8 +2,6 @@
 // definition of basic boolean operations we build a half-adder and then
 // a 4-bit full adder using 4 registers: 2 summands, 1 sum, 1 carry
 
-// https://dev.to/davidk01/some-more-fun-with-alloy-5d7h
-
 // 0 or 1
 let bits = { i: Int | 0 <= i && i <= 1 }
 

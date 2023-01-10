@@ -3,8 +3,6 @@
 /*
  * Towers of Hanoi model
  *
- * Description of problem from http://www.cut-the-knot.com/recurrence/hanoi.html
- *
  * The Tower of Hanoi puzzle was invented by the French mathematician Edouard Lucas
  * in 1883. We are given a tower of eight disks, initially stacked in decreasing size on
  * one of three pegs. The objective is to transfer the entire tower to one of the other

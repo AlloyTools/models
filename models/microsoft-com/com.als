@@ -3,7 +3,8 @@
  * interface and aggregation mechanism.
  *
  * For a detailed description, see:
- *   http://sdg.lcs.mit.edu/~dnj/publications/com-fse00.pdf
+ * "COM revisited: tool-assisted modelling of an architectural framework"
+ * -- Daniel Jackson, Kevin Sullivan
  *
  * author: Daniel Jackson
  */

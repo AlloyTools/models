@@ -2,8 +2,9 @@
  * Models an Intentional Naming System (INS), a scheme for
  * dynamic resource discovery in a dynamic environment.
  *
- * For a detailed description, see:
- *   http://sdg.lcs.mit.edu/pubs/2000/INS_ASE00.pdf
+ * S. Khurshid. Exploring the Design of an Intentional Naming Scheme with an
+ * Automatic Constraint Analyzer. S.M. Thesis. Laboratory for Computer Science,
+ * M.I.T. Cambridge, MA. May 2000.
  *
  * author: Sarfraz Khurshid
  */
