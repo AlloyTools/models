@@ -101,9 +101,9 @@ pred TransHelper[p : Process, tp, tn : State] {
 
 }
 
-pred StateTrans[s, s' : State] {
+pred StateTrans[s, s" : State] {
   all p : Process |
-    TransHelper[p, s, s'] || ValAtState[p,s] = ValAtState[p,s']
+    TransHelper[p, s, s"] || ValAtState[p,s] = ValAtState[p,s"]
 }
 
 
@@ -130,14 +130,14 @@ pred BadLivenessHelper {
 
 pred CTraceWithoutLoop {
   OneAtATimeTrans
-  all t, t' : State | t!=t' => t.val != t'.val
+  all t, t" : State | t!=t" => t.val != t".val
 }
 
 pred DTraceWithoutLoop {
   DDaemonTrans
-  all t, t' : State | t!=t' => {
-    t.val != t'.val
-    (t' in so/nexts[t] && t' != so/next[t]) => !StateTrans[t,t']
+  all t, t" : State | t!=t" => {
+    t.val != t".val
+    (t" in so/nexts[t] && t" != so/next[t]) => !StateTrans[t,t"]
   }
   all t : State | !Legit[t]
 }
@@ -150,9 +150,9 @@ pred ConvergingRun  {
 
 pred OnlyFairLoops {
   OneAtATimeTrans
-  all s, s' : State |
-   (s' in so/nexts[s] && s'.val = s.val) =>
-     (let loopStates = (so/nexts[s] & so/prevs[s']) + s + s' | Process in loopStates.running)
+  all s, s" : State |
+   (s" in so/nexts[s] && s".val = s.val) =>
+     (let loopStates = (so/nexts[s] & so/prevs[s"]) + s + s" | Process in loopStates.running)
 }
 
 assert CMustConverge {
@@ -165,9 +165,9 @@ pred Legit [s : State] {
     int XAtState[p,s] < # Val
     int YAtState[p,s] < # Val
   }
-  all p, p' : Process | {
-    int XAtState[p,s] = int XAtState[p',s]
-    int YAtState[p,s] = int YAtState[p',s]
+  all p, p" : Process | {
+    int XAtState[p,s] = int XAtState[p",s]
+    int YAtState[p,s] = int YAtState[p",s]
   }
 }
 

@@ -25,8 +25,8 @@ fun past : elem->elem { ^(~this/next) }
 
 fun future : elem -> elem { elem <: *this/next }
 
-fun upto[s,s' : elem] : set elem {
-	(s' in s.*(Ord.Next) or finite) implies s.future & ^(Ord.Next).s' else s.*(Ord.Next) + (^(Ord.Next).s' & back.*(Ord.Next))
+fun upto[s,s" : elem] : set elem {
+	(s" in s.*(Ord.Next) or finite) implies s.future & ^(Ord.Next).s" else s.*(Ord.Next) + (^(Ord.Next).s" & back.*(Ord.Next))
 }
 
 

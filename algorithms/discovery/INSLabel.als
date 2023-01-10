@@ -54,8 +54,8 @@ sig AVTree extends LabelTree {
   Null !in (vnodes - root).label + anodes.label
   anodes.label in Attribute
   vnodes.label in Value
-  all n: nodes | all /* disj */ c,c': n.children |
-    c.label != c'.label
+  all n: nodes | all /* disj */ c,c": n.children |
+    c.label != c".label
   all a: anodes | a.children in vnodes && some a.children
   all v: vnodes | v.children in anodes
   no Wildcard.~label.children
@@ -81,8 +81,8 @@ one sig DB extends AVTree {
   all v: vnodes {
     no v.children => some v.recs
     no v.recs & v.^(~children).recs }
-  all a: anodes | all disj v,v': a.children |
-    (no v.*children.recs & v'.*children.recs)
+  all a: anodes | all disj v,v": a.children |
+    (no v.*children.recs & v".*children.recs)
 }
 
 one sig State {
@@ -96,8 +96,8 @@ fact ConformsFixPoint {
       q.ConformsAux[a,nq,na] <=>
       {
        nq.label in Wildcard + na.label
-       all nq': q.children[nq] | some na': a.children[na] |
-         q.ConformsAux[a,nq',na']
+       all nq": q.children[nq] | some na": a.children[na] |
+         q.ConformsAux[a,nq",na"]
       }
 }
 

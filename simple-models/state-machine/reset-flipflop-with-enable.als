@@ -20,10 +20,10 @@ fact {
 	first.state = On
 	no last.event	
 
-	all t' : Trace - first, t : t'.prev {
+	all t" : Trace - first, t : t".prev {
 		some e : Event | 
 					t.event = e 
-			and t'.state = transitions[t.state][t.event]		
+			and t".state = transitions[t.state][t.event]
 	}
 }
 

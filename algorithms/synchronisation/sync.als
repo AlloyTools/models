@@ -71,9 +71,9 @@ fun RestrictFSComplement[fs: Name -> lone FileContents, p: Name]: Name -> lone F
  * A,B - separately modified copies
  * Adirty, Bdirty - sets of paths modified in A and B, respectively, from O.
  *
- * A',B' - results of synchronizer operation
+ * A",B" - results of synchronizer operation
  */
-pred SyncSpec[A, B, A', B': Name -> lone FileContents, Adirty, Bdirty: set Name] {
+pred SyncSpec[A, B, A", B": Name -> lone FileContents, Adirty, Bdirty: set Name] {
   {
      IsValidFS[A]
      IsValidFS[B]
@@ -82,19 +82,19 @@ pred SyncSpec[A, B, A', B': Name -> lone FileContents, Adirty, Bdirty: set Name]
    } => {
     {
      all p: Name | IsRelevantPath[p, A, B] => {
-        SyncSpecForPath[p, A, B, A', B', Adirty, Bdirty]
+        SyncSpecForPath[p, A, B, A", B", Adirty, Bdirty]
      }
     }
-    IsValidFS[A']
-    IsValidFS[B']
+    IsValidFS[A"]
+    IsValidFS[B"]
    }
 }
 
-pred SyncSpecForPath[p: Name, A, B, A', B': Name -> lone FileContents, Adirty, Bdirty: set Name] {
-      (p.A = p.B  =>  (p.A' = p.A && p.B' = p.B))
-      (p !in Adirty => (RestrictFS[A', p] = RestrictFS[B, p] && RestrictFS[B', p] = RestrictFS[B, p]))
-      (p !in Bdirty => (RestrictFS[B', p] = RestrictFS[A, p] && RestrictFS[A', p] = RestrictFS[A, p]))
-      ((p in Adirty && p in Bdirty && p.A != p.B) => (RestrictFS[A',p] = RestrictFS[A,p] && RestrictFS[B',p] = RestrictFS[B,p]))
+pred SyncSpecForPath[p: Name, A, B, A", B": Name -> lone FileContents, Adirty, Bdirty: set Name] {
+      (p.A = p.B  =>  (p.A" = p.A && p.B" = p.B))
+      (p !in Adirty => (RestrictFS[A", p] = RestrictFS[B, p] && RestrictFS[B", p] = RestrictFS[B, p]))
+      (p !in Bdirty => (RestrictFS[B", p] = RestrictFS[A, p] && RestrictFS[A", p] = RestrictFS[A, p]))
+      ((p in Adirty && p in Bdirty && p.A != p.B) => (RestrictFS[A",p] = RestrictFS[A,p] && RestrictFS[B",p] = RestrictFS[B,p]))
 }
 
 pred IsRelevantPath[p: Name, A, B: Name -> lone FileContents] {
@@ -104,25 +104,25 @@ pred IsRelevantPath[p: Name, A, B: Name -> lone FileContents] {
    }
 }
 
-pred SyncSpecExample[A, B, A', B': Name -> lone FileContents, Adirty, Bdirty: set Name] {
+pred SyncSpecExample[A, B, A", B": Name -> lone FileContents, Adirty, Bdirty: set Name] {
    IsValidFS[A]
    IsValidFS[B]
    IsValidDirty[Adirty]
    IsValidDirty[Bdirty]
-   SyncSpec[A, B, A', B', Adirty, Bdirty]
-   A != A'
+   SyncSpec[A, B, A", B", Adirty, Bdirty]
+   A != A"
 }
 
 //run SyncSpecExample for 3
 
 pred SyncSpecNotUnique  {
-  some A, B, A1', B1', A2', B2': Name -> lone FileContents, Adirty, Bdirty: set Name | {
+  some A, B, A1", B1", A2", B2": Name -> lone FileContents, Adirty, Bdirty: set Name | {
     IsValidFS[A] && IsValidFS[B]
     IsValidDirty[Adirty] && IsValidDirty[Bdirty]
     //DirtiesValid(A, B, Adirty, Bdirty)
-    (A1' != A2'  || B1' != B2')
-    SyncSpec[A, B, A1', B1', Adirty, Bdirty]
-    SyncSpec[A, B, A2', B2', Adirty, Bdirty]
+    (A1" != A2"  || B1" != B2")
+    SyncSpec[A, B, A1", B1", Adirty, Bdirty]
+    SyncSpec[A, B, A2", B2", Adirty, Bdirty]
   }
 }
 

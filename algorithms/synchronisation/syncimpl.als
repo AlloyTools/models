@@ -42,9 +42,9 @@ fun ChildrenAB[A, B: Name -> lone FileContents, p: Name]: set Name {
 
 pred reconHelper[Adirty, Bdirty: set Name] {
    all p: Name {
-      let A = p.Ain, B = p.Bin, A' = p.Aout, B' = p.Bout | {
+      let A = p.Ain, B = p.Bin, A" = p.Aout, B" = p.Bout | {
          some p.(A+B) => {
-             (p !in Adirty && p !in Bdirty) => (A' = A  && B' = B)  else {
+             (p !in Adirty && p !in Bdirty) => (A" = A  && B" = B)  else {
              (p.A = Dir && p.B = Dir) => {
                 no p_children => {
                   p.Aout = p.Ain
@@ -61,41 +61,41 @@ pred reconHelper[Adirty, Bdirty: set Name] {
                 }  // some p_children
              } else {  // !(p.A = Dir && p.B = Dir)
                p !in Adirty => {
-                 A' = RestrictFS[B, p] + RestrictFSComplement[A, p]
-                 B' = B
+                 A" = RestrictFS[B, p] + RestrictFSComplement[A, p]
+                 B" = B
                } else {
                   p !in Bdirty => {
-                     A' = A
-                     B' = RestrictFS[A, p] + RestrictFSComplement[B, p]
+                     A" = A
+                     B" = RestrictFS[A, p] + RestrictFSComplement[B, p]
                   } else {
-                     A' = A
-                     B' = B
+                     A" = A
+                     B" = B
                   }
                }  // not "p !in Adirty"
              }  // not case 2 i.e. not both are dirs
           }  // not both clean
        }  // some p.(A+B)
-      }  // let A =, B=, A'=, B'=
+      }  // let A =, B=, A"=, B"=
     } // all p: Name
 }  // reconHelper()
 
-pred recon[A, B, A', B': Name -> lone FileContents, Adirty, Bdirty: set Name] {
+pred recon[A, B, A", B": Name -> lone FileContents, Adirty, Bdirty: set Name] {
    A = ReconName.Ain
    B = ReconName.Bin
-   A' = ReconName.Aout
-   B' = ReconName.Bout
+   A" = ReconName.Aout
+   B" = ReconName.Bout
    reconHelper[Adirty, Bdirty]
 }
 
 assert Correctness {
-  all A, B, A', B': Name -> lone FileContents, Adirty, Bdirty: set Name | {
+  all A, B, A", B": Name -> lone FileContents, Adirty, Bdirty: set Name | {
     {
      DirtiesValid[A, B, Adirty, Bdirty]
-     recon[A, B, A', B', Adirty, Bdirty]
+     recon[A, B, A", B", Adirty, Bdirty]
      //no Adirty + Bdirty
     }
     =>
-     SyncSpec[A, B, A', B', Adirty, Bdirty]
+     SyncSpec[A, B, A", B", Adirty, Bdirty]
   }
 }
 
