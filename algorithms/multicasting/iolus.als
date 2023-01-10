@@ -9,7 +9,6 @@
  *   Mana Taghdiri, "Lightweight Modelling and Automatic Analysis
  *   of Multicast Key Management Schemes", Masters Thesis, Dept.
  *   of EECS, MIT, Dec. 2002.
- *   http://sdg.lcs.mit.edu/pubs/theses/taghdiri_masters.pdf
  *
  * author: Mana Taghdiri
  */

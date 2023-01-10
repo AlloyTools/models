@@ -2,7 +2,10 @@
  * Models the chord distributed hash table lookup protocol.
  *
  * For a detailed description, see:
- *   http://www.pdos.lcs.mit.edu/papers/chord:sigcomm01/
+ *
+ * Chord: A Scalable Peer-to-peer Lookup Service for Internet Applications
+ * Ion Stoica, Robert Morris, David Karger, M. Frans Kaashoek, and Hari Balakrishnan.
+ *
  */
 
 open util/relation as rel
