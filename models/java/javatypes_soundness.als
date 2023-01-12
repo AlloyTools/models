@@ -38,7 +38,7 @@ sig Slot {}
 
 abstract sig Statement {}
 sig Assignment extends Statement {
-  var: Variable,
+  v: Variable,
   expr: Expr
   }
 sig Setter extends Statement {
@@ -80,8 +80,8 @@ sig State {
 pred RuntimeTypesOK [s: State] {
   all o: s.objects, f: o.type.fields |
     let v = s.holds [o.slot [f]] | HasType [v, f.declType]
-  all var: s.vars |
-    let v = s.holds [var] | HasType [v, var.declType]
+  all v: s.vars |
+    let v = s.holds [v] | HasType [v, v.declType]
   }
 
 pred HasType [v: Value, t: Type] {
