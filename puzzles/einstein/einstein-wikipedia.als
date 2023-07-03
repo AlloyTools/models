@@ -21,10 +21,13 @@ sig House {
 } 
 
 
-fact  disjunct {
+fact disjunct {
 	all disj h1, h2 : House | 
-		all f : House$.subfields | 
-			h1.(f.value) != h2.(f.value)
+		h1.house != h2.house and
+		h1.home != h2.home and
+		h1.drunk != h2.drunk and
+		h1.smoker != h2.smoker and
+		h1.owns != h2.owns
 }
 
 pred House.nextTo[ other : House ] { 
