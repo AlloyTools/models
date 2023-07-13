@@ -24,11 +24,16 @@ Since read operations do not affect the models state, they needn't be specified.
 > See key-value-store-simple.als for an example implementation
 
 ## What is snapshot isolation
-Snapshot isolation implements the isolation level `serializable` as defined by Oracle.
-However, due to the write skew anomaly, which will be demonstrated later,
+Snapshot isolation is an isolation level implementation, which prevents most anomalies with concurrent
+transaction mentioned in the SQL standard. Specifically "Dirty Write", "Dirty Read", "Non-repeatable read" and "Phantom row".
+Oracle databases use this implementation when specifying the isolation level `serializable`.
+However, this is inconsistent with the SQL standard, which defines that all transactions have to be
+serializable to fulfill this level. Due to the "Write Skew" anomaly, which will be demonstrated later,
 this isolation level isn't actually serializable.[[Renz22]](https://esb-dev.github.io/mat/IsoLevel.pdf)
 
-### Impementation
+This model confirms that write skew is possible.
+
+### Implementation
 The store may only be changed by transactions, which -- when opened -- take a snapshot
 of the entire store. All read operations in the transaction see the snapshot and therefore
 a consistent store.
@@ -247,9 +252,9 @@ The following screenshot shows an example of the visualization with a theme appl
 Now the specification is ready to be checked for anomalies.
 
 ## Anomalies with snapshot isolation
-Since snapshot isolation implements the `serializable` isolation level, most anomalies should not be possible.
-This can be verified using Alloy, and indeed snapshot isolation prevents dirty writes, dirty reads,
-non-repeatable reads and phantom rows. However, as mentioned previously it *does* allow write skews.
+The following assertions specify concrete scenarios for each of the previously mentioned anomalies.
+The assertions assume that no two transactions can exist, with which the anomalous behaviour occurs.
+If alloy finds a counterexample, the anomaly is indeed possible.
 
 ```alloy
 -- Assertions assume the anomaly *cannot* occur. If a counterexample is found
@@ -327,19 +332,18 @@ check WriteSkew
 ```
 
 Running these through the analyzer confirms: Alloy can only find a counterexample
-(implying the anomaly is possible) for WriteSkew.
+(implying the anomaly is possible) for "Write Skew".
 
 ### Write skew anomaly
 A write skew occurrs when two transactions both concurrently read related data, update disjoint data based on the read information and commit.
 > See [Snapshot Isolation Definition on Wikipedia](https://en.wikipedia.org/wiki/Snapshot_isolation#Definition)
-> for another example of write skew anomaly.
+> for a formal definition and another example of the write skew anomaly.
 
 We now have shown that snapshot isolation does not account for this anomaly. As an example of true
 serializability one may look at PostgreSQL 9.1, which introduced a new implementation called
-`serializable snapshot isolation` (SSI), which prevents write skews!
-Of course the real `serializable` isolation level also
-prohibits this anomaly and can for example be implemented using the two-phase lock protocol.
+`serializable snapshot isolation` (SSI), which prevents write skews! See [[Ports12]](https://arxiv.org/pdf/1208.4179v1.pdf), which describes designing and implementing this technique.
+Of course the `serializable` isolation level can also be achieved using other implementations.
+The two-phase lock protocol is a common example.
 
 ## Outlook
-In future version, this model may be updated with specifications and verifications of the mentioned PostgreSQL
-SSI level and two-phase locking.
+In future version, this model may be updated with specifications and verifications of single-phase and two-phase locking, the former still allowing write skew, while the latter should not.
