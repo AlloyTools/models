@@ -51,7 +51,7 @@ To implement snapshot isolation, the key-values-stores operations change/get ext
 - Update(t,k,v):    In transaction t, update the value in the snapshot under key k to v
 - Remove(t,k):      In transaction t, remove the key k from the snapshot
 - Rollback(t):      Rollback transaction t, don't change the store
-- Close(t):         Commit transaction t, update the store according to the snapshots changes and notify other ongoing transactions about possible write-write conflicts
+- Commit(t):         Commit transaction t, update the store according to the snapshots changes and notify other ongoing transactions about possible write-write conflicts
 
 Read operations needn't be specified for snapshot isolation either. Snapshot reads don't directly
 affect anything.
@@ -150,7 +150,7 @@ pred rollbackTx[t: Transaction] {
 }
 
 -- Commit open transaction, merge with store
-pred closeTx[t: Transaction] {
+pred commitTx[t: Transaction] {
 	t in Store.openTx
 	no (t.missed & t.written)
 	openTx' = Store -> (Store.openTx - t)
@@ -198,7 +198,7 @@ fun next: Transition {
 	+ t_update.Value.Key.Transaction
 	+ t_remove.Key.Transaction
 	+ t_rollbackTx.Transaction
-	+ t_closeTx.Transaction
+	+ t_commitTx.Transaction
 	+ t_nop
 }
 
@@ -214,7 +214,7 @@ fact KeyValueStore {
 -- SECTION VISUALIZATION
 -- These functions are used to wrap transition predicates
 -- This allows showing in the visualizer which transition happens in each step
-enum Transition { Open, Add, Update, Remove, Rollback, Close, Nop }
+enum Transition { Open, Add, Update, Remove, Rollback, Commit, Nop }
 
 fun t_openTx: Transition -> Transaction {
 	{ tp: Open, t: Transaction | openTx[t] }
@@ -236,8 +236,8 @@ fun t_rollbackTx: Transition -> Transaction {
 	{ tp: Rollback, t: Transaction | rollbackTx[t] }
 }
 
-fun t_closeTx: Transition -> Transaction {
-	{ tp: Close, t: Transaction | closeTx[t] }
+fun t_commitTx: Transition -> Transaction {
+	{ tp: Commit, t: Transaction | commitTx[t] }
 }
 
 fun t_nop: Transition {
@@ -267,8 +267,8 @@ assert DirtyWrite {
 		;openTx[t2]
 		;add[t1,k,v1]
 		;add[t2,k,v2]
-		;closeTx[t1]
-		;closeTx[t2]
+		;commitTx[t1]
+		;commitTx[t2]
 	}
 }
 check DirtyWrite
@@ -296,7 +296,7 @@ assert NonRepeatableRead {
 		;openTx[t2]
 		;t1.snapshotStore[k] = v1
 		;update[t2,k,v2]
-		;closeTx[t2]
+		;commitTx[t2]
 		;t1.snapshotStore[k] = v2
 	}
 }
@@ -310,8 +310,8 @@ assert PhantomRow {
 		;openTx[t2]
 		;#t1.snapshotStore = 0
 		;add[t2,k,v]
-		;closeTx[t2]
-		-- Make sure closeTx[t2] and the verification occur at the same time.
+		;commitTx[t2]
+		-- Make sure commitTx[t2] and the verification occur at the same time.
 		-- Otherwise t1 might have just added a new row itself
 		#t1.snapshotStore = 1
 	}
