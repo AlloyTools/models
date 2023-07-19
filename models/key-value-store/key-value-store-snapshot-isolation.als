@@ -87,7 +87,7 @@ pred commitTx[t: Transaction] {
 	t in Store.openTx
 	no (t.missed & t.written)
 	openTx' = Store -> (Store.openTx - t)
-	snapshotStore' = snapshotStore - (t -> Key -> Value)
+	snapshotStore' = snapshotStore - t <: snapshotStore
 	written' = written - (t -> Key)
 
 	-- All other currently open transactions add what t has written to their set of missed writes
