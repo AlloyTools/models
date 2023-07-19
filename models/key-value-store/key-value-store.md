@@ -70,30 +70,27 @@ However this can be substituted by simply checking the snapshot of a transaction
 let unchanged[r] { (r)' = (r) }
 
 -- Set of all keys in the key-value-store
-sig Key {}
+sig Key {
+	var store: lone Value										-- Each key points to one or no value, represents the current state of the store
+}
 
 -- Set of all values
 sig Value {}
-
--- The store (changed over time by transactions committing)
-one sig Store {
-	var store: Key -> lone Value,								-- Each key points to one or no value
-	var openTx: set Transaction,								-- Set of open snapshot transactions
-}
 
 -- Set of all transactions
 sig Transaction {
 	var snapshotStore: Key -> lone Value,						-- Snapshot of `store` for this transaction
 	var written: set Key,										-- Keys written to in this transaction
-	var missed: set Key,										-- Writes (from concurrently committed transactions)
-																-- invisible to this transaction
+	var missed: set Key,										-- Writes (from concurrently committed transactions) invisible to this transaction
 }
+
+var sig OpenTransaction in Transaction {}
 
 -- Open a new transaction
 pred openTx[t: Transaction] {
-	t not in Store.openTx
-	openTx' = Store -> (Store.openTx ++ t)
-	snapshotStore' = snapshotStore ++ (t -> Store.store)
+	t not in OpenTransaction
+	OpenTransaction' = OpenTransaction + t
+	snapshotStore' = snapshotStore + (t -> store)
 
 	unchanged[written]
 	unchanged[missed]
@@ -102,47 +99,45 @@ pred openTx[t: Transaction] {
 
 -- Add a key-value-pair to an open transaction
 pred add[t: Transaction, k: Key, v: Value] {
-	t in Store.openTx
-	no t.snapshotStore[k]										-- Key may not have value yet,
-																-- otherwise update must be done
-	snapshotStore' = snapshotStore ++ (t -> (t.snapshotStore ++ k -> v))
-	written' = written ++ t -> (t.written + k)					-- Add k to t.written
+	t in OpenTransaction
+	no t.snapshotStore[k]										-- Key may not have value yet, otherwise update must be done
+	snapshotStore' = snapshotStore + (t -> k -> v)
+	written' = written + (t -> k)								-- Add k to t.written
 	
-	unchanged[openTx]
+	unchanged[OpenTransaction]
 	unchanged[missed]
 	unchanged[store]
 }
 
 -- Update the value of a key-value-pair in an open transaction
 pred update[t: Transaction, k: Key, v: Value] {
-	t in Store.openTx
-	some t.snapshotStore[k]										-- Key must have value,
-																-- otherwise add must be done
-	snapshotStore' = snapshotStore ++ (t -> (t.snapshotStore ++ k -> v))
-	written' = written ++ t -> (t.written + k)					-- Add k to t.written
+	t in OpenTransaction
+	some t.snapshotStore[k]										-- Key must have value, otherwise add must be done
+	snapshotStore' = snapshotStore - (t -> k -> Value) + (t -> k -> v)
+	written' = written + (t -> k)								-- Add k to t.written
 	
-	unchanged[openTx]
+	unchanged[OpenTransaction]
 	unchanged[missed]
 	unchanged[store]
 }
 
 -- Remove a key-value-pair from an open transaction
 pred remove[t: Transaction, k: Key] {
-	t in Store.openTx
+	t in OpenTransaction
 	some t.snapshotStore[k]										-- Key must have value
 	snapshotStore' = snapshotStore - (t -> k -> Value)
-	written' = written ++ t -> (t.written + k)					-- Add k to t.written
+	written' = written + (t -> k)								-- Add k to t.written
 
-	unchanged[openTx]
+	unchanged[OpenTransaction]
 	unchanged[missed]
 	unchanged[store]
 }
 
 -- Rollback open transaction, doesn't affect store
 pred rollbackTx[t: Transaction] {
-	t in Store.openTx
-	openTx' = Store -> (Store.openTx - t)
-	snapshotStore' = snapshotStore - (t -> Key -> Value)
+	t in OpenTransaction
+	OpenTransaction' = OpenTransaction - t
+	snapshotStore' = snapshotStore - t <: snapshotStore
 	written' = written - (t -> Key)
 	missed' = missed - (t -> Key)
 
@@ -151,18 +146,17 @@ pred rollbackTx[t: Transaction] {
 
 -- Commit open transaction, merge with store
 pred commitTx[t: Transaction] {
-	t in Store.openTx
+	t in OpenTransaction
 	no (t.missed & t.written)
-	openTx' = Store -> (Store.openTx - t)
-	snapshotStore' = snapshotStore - (t -> Key -> Value)
+	OpenTransaction' = OpenTransaction - t
+	snapshotStore' = snapshotStore - t <: snapshotStore
 	written' = written - (t -> Key)
 
 	-- All other currently open transactions add what t has written to their set of missed writes
-	all tx: Transaction | tx.missed'= (tx in (Store.openTx - t) implies tx.missed + t.written else none)
+	all tx: Transaction | tx.missed'= (tx in (OpenTransaction - t) implies tx.missed + t.written else none)
 	-- Update all keys in store that t has written too (including removal!)
-	all k: Key | Store.store'[k] = (k in t.written implies t.snapshotStore[k] else Store.store[k])
+	all k: Key | store'[k] = (k in t.written implies t.snapshotStore[k] else store[k])
 }
-
 ```
 
 Now all that's missing from the specification before it can be tested are transitions between states.
@@ -176,7 +170,7 @@ happens in each step.
 -- Do nothing / stutter (not necessary, but is useful for debugging)
 pred nop {
 	unchanged[store]
-	unchanged[openTx]
+	unchanged[OpenTransaction]
 	unchanged[snapshotStore]
 	unchanged[written]
 	unchanged[missed]
@@ -184,11 +178,11 @@ pred nop {
 
 -- Initial state
 pred init {
-	no Store.store 												-- no values are stored
-	no Store.openTx												-- no open transactions
-	no snapshotStore											-- no snapshots
-	no written													-- no writes yet
-	no missed													-- no missed writes yet
+	no store 															-- no values are stored
+	no OpenTransaction											-- no open transactions
+	no snapshotStore												-- no snapshots
+	no written														-- no writes yet
+	no missed															-- no missed writes yet
 }
 
 -- Next state transition
@@ -207,11 +201,10 @@ fact KeyValueStore {
 	init
 	always some { this/next }
 }
--- ENDSECTION MAIN
 
 
 
--- SECTION VISUALIZATION
+
 -- These functions are used to wrap transition predicates
 -- This allows showing in the visualizer which transition happens in each step
 enum Transition { Open, Add, Update, Remove, Rollback, Commit, Nop }
@@ -271,27 +264,27 @@ assert DirtyWrite {
 		;commitTx[t2]
 	}
 }
-check DirtyWrite
+check DirtyWrite expect 0
 
 assert DirtyRead {
 	-- Writes from concurrent transactions may not affect each others reads
 	no disj t1, t2: Transaction, k: Key, disj v1, v2: Value | {
 		-- Since the following add implies that k cannot have a value when t1 is opened
 		-- The following condition is unnecessary, it does however make clearer what this intends to verify
-		Store.store[k] = v2
+		store[k] = v2
 		;openTx[t1]
 		;openTx[t2]
 		;add[t1,k,v1]
 		;t2.snapshotStore[k] = v1
 	}
 }
-check DirtyRead
+check DirtyRead expect 0
 
 assert NonRepeatableRead {
 	-- Writes from concurrently committed transactions may not affect reads of others
 	-- Only commits before opening a transaction may be taken into account
 	no disj t1, t2: Transaction, k: Key, disj v1, v2: Value | {
-		Store.store[k] = v1
+		store[k] = v1
 		openTx[t1]
 		;openTx[t2]
 		;t1.snapshotStore[k] = v1
@@ -300,12 +293,12 @@ assert NonRepeatableRead {
 		;t1.snapshotStore[k] = v2
 	}
 }
-check NonRepeatableRead
+check NonRepeatableRead expect 0
 
 assert PhantomRow {
 	-- Concurrent transactions may not add new rows (key-value-pairs) to each other
 	no disj t1, t2: Transaction, k: Key, v: Value | {
-		#Store.store = 0
+		#store = 0
 		openTx[t1]
 		;openTx[t2]
 		;#t1.snapshotStore = 0
@@ -316,7 +309,7 @@ assert PhantomRow {
 		#t1.snapshotStore = 1
 	}
 }
-check PhantomRow
+check PhantomRow expect 0
 
 pred noDuplicateWrites {
 	-- No transaction is allowed to add/update to a value, that's already in its snapshot
@@ -325,10 +318,9 @@ pred noDuplicateWrites {
 }
 assert WriteSkew {
 	-- Never writing an existing values should ensure no duplicated values in store
-	always noDuplicateWrites implies always #Store.store[Key] = #Store.store
+	always noDuplicateWrites implies always #store[Key] = #store
 }
-check WriteSkew
--- ENDSECTION ANOMALY VERIFICATION
+check WriteSkew expect 1
 ```
 
 Running these through the analyzer confirms: Alloy can only find a counterexample

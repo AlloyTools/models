@@ -9,7 +9,7 @@
 
 <node>
    <type name="Add"/>
-   <type name="Close"/>
+   <type name="Commit"/>
    <type name="Int"/>
    <type name="Remove"/>
    <type name="Rollback"/>
@@ -17,6 +17,14 @@
    <type name="univ"/>
    <type name="Update"/>
    <type name="seq/Int"/>
+   <set name="$Scenario_k1" type="Key"/>
+   <set name="$Scenario_k2" type="Key"/>
+   <set name="$Scenario_k3" type="Key"/>
+   <set name="$Scenario_t1" type="Transaction"/>
+   <set name="$Scenario_t2" type="Transaction"/>
+   <set name="$Scenario_t3" type="Transaction"/>
+   <set name="$Scenario_v1" type="Value"/>
+   <set name="$Scenario_v2" type="Value"/>
 </node>
 
 <node shape="Box" color="Red">
@@ -31,8 +39,8 @@
    <type name="Nop"/>
 </node>
 
-<node shape="Parallelogram" color="Blue">
-   <type name="Store"/>
+<node style="inherit" color="Yellow">
+   <set name="this/OpenTransaction" type="Transaction"/>
 </node>
 
 <node visible="no">
@@ -53,10 +61,6 @@
    <set name="$next" type="Transition"/>
 </node>
 
-<edge attribute="no">
-   <relation name="openTx"> <type name="Store"/> <type name="Transaction"/> </relation>
-</edge>
-
 <edge attribute="yes">
    <relation name="snapshotStore"> <type name="Transaction"/> <type name="Key"/> <type name="Value"/> </relation>
 </edge>
@@ -71,13 +75,11 @@
 
 <edge visible="no" attribute="yes">
    <relation name="$t_add"> <type name="Transition"/> <type name="Transaction"/> <type name="Key"/> <type name="Value"/> </relation>
-   <relation name="$t_closeTx"> <type name="Transition"/> <type name="Transaction"/> </relation>
    <relation name="$t_openTx"> <type name="Transition"/> <type name="Transaction"/> </relation>
    <relation name="$t_remove"> <type name="Transition"/> <type name="Transaction"/> <type name="Key"/> </relation>
    <relation name="$t_rollbackTx"> <type name="Transition"/> <type name="Transaction"/> </relation>
    <relation name="$t_update"> <type name="Transition"/> <type name="Transaction"/> <type name="Key"/> <type name="Value"/> </relation>
    <relation name="missed"> <type name="Transaction"/> <type name="Key"/> </relation>
-   <relation name="store"> <type name="Store"/> <type name="Key"/> <type name="Value"/> </relation>
    <relation name="written"> <type name="Transaction"/> <type name="Key"/> </relation>
 </edge>
 
