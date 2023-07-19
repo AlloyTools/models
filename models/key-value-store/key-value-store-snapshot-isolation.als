@@ -27,8 +27,8 @@ sig Transaction {
 -- Open a new transaction
 pred openTx[t: Transaction] {
 	t not in Store.openTx
-	openTx' = Store -> (Store.openTx ++ t)
-	snapshotStore' = snapshotStore ++ (t -> Store.store)
+	openTx' = openTx + (Store -> t)
+	snapshotStore' = snapshotStore + (t -> Store.store)
 
 	unchanged[written]
 	unchanged[missed]
@@ -39,8 +39,8 @@ pred openTx[t: Transaction] {
 pred add[t: Transaction, k: Key, v: Value] {
 	t in Store.openTx
 	no t.snapshotStore[k]										-- Key may not have value yet, otherwise update must be done
-	snapshotStore' = snapshotStore ++ (t -> (t.snapshotStore ++ k -> v))
-	written' = written ++ t -> (t.written + k)			-- Add k to t.written
+	snapshotStore' = snapshotStore + (t -> k -> v)
+	written' = written + (t ->  k)							-- Add k to t.written
 	
 	unchanged[openTx]
 	unchanged[missed]
@@ -51,8 +51,8 @@ pred add[t: Transaction, k: Key, v: Value] {
 pred update[t: Transaction, k: Key, v: Value] {
 	t in Store.openTx
 	some t.snapshotStore[k]									-- Key must have value, otherwise add must be done
-	snapshotStore' = snapshotStore ++ (t -> (t.snapshotStore ++ k -> v))
-	written' = written ++ t -> (t.written + k)			-- Add k to t.written
+	snapshotStore' = snapshotStore - (t -> k -> Value) + (t -> k -> v)
+	written' = written + (t -> k)								-- Add k to t.written
 	
 	unchanged[openTx]
 	unchanged[missed]
@@ -64,7 +64,7 @@ pred remove[t: Transaction, k: Key] {
 	t in Store.openTx
 	some t.snapshotStore[k]									-- Key must have value
 	snapshotStore' = snapshotStore - (t -> k -> Value)
-	written' = written ++ t -> (t.written + k)			-- Add k to t.written
+	written' = written + (t -> k)								-- Add k to t.written
 
 	unchanged[openTx]
 	unchanged[missed]
@@ -74,8 +74,8 @@ pred remove[t: Transaction, k: Key] {
 -- Rollback open transaction, doesn't affect store
 pred rollbackTx[t: Transaction] {
 	t in Store.openTx
-	openTx' = Store -> (Store.openTx - t)
-	snapshotStore' = snapshotStore - (t -> Key -> Value)
+	openTx' = openTx - (Store -> t)
+	snapshotStore' = snapshotStore - t <: snapshotStore
 	written' = written - (t -> Key)
 	missed' = missed - (t -> Key)
 
