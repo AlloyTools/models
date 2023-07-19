@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view nodetheme="Martha">
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Add"/>
+   <type name="Commit"/>
+   <type name="Int"/>
+   <type name="Remove"/>
+   <type name="Rollback"/>
+   <type name="String"/>
+   <type name="univ"/>
+   <type name="Update"/>
+   <type name="seq/Int"/>
+   <set name="$Scenario_k1" type="Key"/>
+   <set name="$Scenario_k2" type="Key"/>
+   <set name="$Scenario_k3" type="Key"/>
+   <set name="$Scenario_t1" type="Transaction"/>
+   <set name="$Scenario_t2" type="Transaction"/>
+   <set name="$Scenario_t3" type="Transaction"/>
+   <set name="$Scenario_v1" type="Value"/>
+   <set name="$Scenario_v2" type="Value"/>
+</node>
+
+<node shape="Box" color="Red">
+   <type name="Transaction"/>
+</node>
+
+<node shape="Egg" color="Green">
+   <type name="Open"/>
+</node>
+
+<node shape="Ellipse" color="Yellow">
+   <type name="Nop"/>
+</node>
+
+<node style="inherit" color="Yellow">
+   <set name="this/OpenTransaction" type="Transaction"/>
+</node>
+
+<node visible="no">
+   <type name="Key"/>
+   <type name="Transition"/>
+   <type name="ordering/Ord"/>
+</node>
+
+<node visible="no" shape="Inv Triangle" color="Gray">
+   <type name="Value"/>
+</node>
+
+<node visible="no" showlabel="no" style="Bold" label="nop">
+   <set name="$t_nop" type="Transition"/>
+</node>
+
+<node visible="yes" showlabel="no" style="Bold" shape="Inv Trapezoid" color="Gray">
+   <set name="$next" type="Transition"/>
+</node>
+
+<edge attribute="yes">
+   <relation name="snapshotStore"> <type name="Transaction"/> <type name="Key"/> <type name="Value"/> </relation>
+</edge>
+
+<edge color="Gray" constraint="no">
+   <relation name="Next"> <type name="ordering/Ord"/> <type name="Transition"/> <type name="Transition"/> </relation>
+</edge>
+
+<edge color="Gray" visible="no" attribute="yes" constraint="no">
+   <relation name="First"> <type name="ordering/Ord"/> <type name="Transition"/> </relation>
+</edge>
+
+<edge visible="no" attribute="yes">
+   <relation name="$t_add"> <type name="Transition"/> <type name="Transaction"/> <type name="Key"/> <type name="Value"/> </relation>
+   <relation name="$t_openTx"> <type name="Transition"/> <type name="Transaction"/> </relation>
+   <relation name="$t_remove"> <type name="Transition"/> <type name="Transaction"/> <type name="Key"/> </relation>
+   <relation name="$t_rollbackTx"> <type name="Transition"/> <type name="Transaction"/> </relation>
+   <relation name="$t_update"> <type name="Transition"/> <type name="Transaction"/> <type name="Key"/> <type name="Value"/> </relation>
+   <relation name="missed"> <type name="Transaction"/> <type name="Key"/> </relation>
+   <relation name="written"> <type name="Transaction"/> <type name="Key"/> </relation>
+</edge>
+
+</view>
+
+</alloy>
