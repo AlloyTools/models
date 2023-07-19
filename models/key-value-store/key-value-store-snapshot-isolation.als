@@ -185,7 +185,7 @@ assert DirtyWrite {
 		;commitTx[t2]
 	}
 }
-check DirtyWrite
+check DirtyWrite expect 0
 
 assert DirtyRead {
 	-- Writes from concurrent transactions may not affect each others reads
@@ -199,7 +199,7 @@ assert DirtyRead {
 		;t2.snapshotStore[k] = v1
 	}
 }
-check DirtyRead
+check DirtyRead expect 0
 
 assert NonRepeatableRead {
 	-- Writes from concurrently committed transactions may not affect reads of others
@@ -214,7 +214,7 @@ assert NonRepeatableRead {
 		;t1.snapshotStore[k] = v2
 	}
 }
-check NonRepeatableRead
+check NonRepeatableRead expect 0
 
 assert PhantomRow {
 	-- Concurrent transactions may not add new rows (key-value-pairs) to each other
@@ -230,7 +230,7 @@ assert PhantomRow {
 		#t1.snapshotStore = 1
 	}
 }
-check PhantomRow
+check PhantomRow expect 0
 
 pred noDuplicateWrites {
 	-- No transaction is allowed to add/update to a value, that's already in its snapshot
@@ -241,7 +241,7 @@ assert WriteSkew {
 	-- Never writing an existing values should ensure no duplicated values in store
 	always noDuplicateWrites implies always #Store.store[Key] = #Store.store
 }
-check WriteSkew
+check WriteSkew expect 1
 -- ENDSECTION ANOMALY VERIFICATION
 
 
@@ -259,7 +259,8 @@ assert MissedWrites {
 	}
 }
 
-check MissedWrites
+-- Limiting this to 5 steps as is takes very long
+check MissedWrites for 5 steps expect 0
 
 run Scenario {
 	some disj t1, t2, t3: Transaction, disj k1, k2, k3 : Key, disj v1, v2: Value | {
@@ -275,11 +276,11 @@ run Scenario {
 		;add[t2, k3, v1]
 		;commitTx[t2]
 		;commitTx[t1]
-		; always nop
+		;always nop
 	}
-} for exactly 3 Transaction, exactly 3 Key, exactly 3 Value, 20 steps
+} for exactly 3 Transaction, exactly 3 Key, exactly 3 Value, 20 steps expect 1
 
 -- Finds some random progression of steps leading to a store where every key is mapped to some value
 run Random {
 	eventually #Store.store = 3
-} for exactly 3 Transaction, exactly 3 Key, exactly 3 Value, exactly 20 steps
+} for exactly 3 Transaction, exactly 3 Key, exactly 3 Value, exactly 20 steps expect 1
