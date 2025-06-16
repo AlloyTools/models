@@ -92,9 +92,9 @@ fact traces {
 	}
 
 fact NoIntervening {
-	all t: Time-last | let t" = t.next, t" = t".next |
+	all t: Time-last | let t" = t.next, t"" = t".next |
 		all g: Guest, r: Room, k: Key |
-			checkin [t, t", g, r, k] => (entry [t", t", g, r, k] or no t")
+			checkin [t, t", g, r, k] => (entry [t", t"", g, r, k] or no t"")
 	}
 
 assert NoBadEntry {
