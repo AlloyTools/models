@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<alloy>
+
+<view nodetheme="Martha">
+
+<defaultnode/>
+
+<defaultedge/>
+
+<node>
+   <type name="Add"/>
+   <type name="Int"/>
+   <type name="Remove"/>
+   <type name="String"/>
+   <type name="univ"/>
+   <type name="Update"/>
+   <type name="seq/Int"/>
+   <set name="$Playground_k1" type="Key"/>
+   <set name="$Playground_k2" type="Key"/>
+   <set name="$Playground_k3" type="Key"/>
+   <set name="$Playground_v1" type="Value"/>
+   <set name="$Playground_v2" type="Value"/>
+</node>
+
+<node shape="Ellipse" color="Yellow">
+   <type name="Nop"/>
+</node>
+
+<node shape="Parallelogram" color="Blue">
+   <type name="Store"/>
+</node>
+
+<node visible="no">
+   <type name="Key"/>
+   <type name="Transition"/>
+   <type name="ordering/Ord"/>
+</node>
+
+<node visible="no" shape="Inv Triangle" color="Gray">
+   <type name="Value"/>
+</node>
+
+<node visible="no" showlabel="no" style="Bold" label="nop">
+   <set name="$t_nop" type="Transition"/>
+</node>
+
+<node visible="yes" showlabel="no" style="Bold" shape="Inv Trapezoid" color="Gray">
+   <set name="$next" type="Transition"/>
+</node>
+
+<edge color="Gray" constraint="no">
+   <relation name="Next"> <type name="ordering/Ord"/> <type name="Transition"/> <type name="Transition"/> </relation>
+</edge>
+
+<edge color="Gray" visible="no" attribute="yes" constraint="no">
+   <relation name="First"> <type name="ordering/Ord"/> <type name="Transition"/> </relation>
+</edge>
+
+<edge visible="no" attribute="yes">
+   <relation name="$t_add"> <type name="Transition"/> <type name="Key"/> <type name="Value"/> </relation>
+   <relation name="$t_remove"> <type name="Transition"/> <type name="Key"/> </relation>
+   <relation name="$t_update"> <type name="Transition"/> <type name="Key"/> <type name="Value"/> </relation>
+   <relation name="store"> <type name="Store"/> <type name="Key"/> <type name="Value"/> </relation>
+</edge>
+
+</view>
+
+</alloy>
